@@ -1,0 +1,35 @@
+[workspace]
+authors = ["avcopan <avcopan@gmail.com>"]
+channels = ["conda-forge"]
+name = "copier-claude-project"
+platforms = ["linux-64"]
+version = "0.0.0"
+
+[tasks]
+# Individual tasks for pre-commit hooks (must be added to lefthook.yaml)
+# Check for merge conflict markers (lefthook.yaml runs the script directly, which also
+# works when pixi.toml itself has conflicts)
+conflicts = "./scripts/conflicts.sh"
+lint = "shellcheck --severity=warning scripts/*.sh template/scripts/*.sh"  # lint the shell scripts (style suggestions off)
+workflows = "actionlint"  # lint the GitHub Actions workflows
+# Run pre-commit hooks (see lefthook.yaml)
+pre-commit = "lefthook run pre-commit --all-files"
+# Initiate release
+version = "tbump current-version"
+changelog = { cmd = "keepachangelog release {{ version }}", args=["version"] }
+release = "tbump"
+# Toggle Git hooks on/off
+hooks = "./scripts/hooks.sh"
+# Set up this repository after cloning it (only run once)
+init = "./scripts/init.sh"
+
+[dependencies]
+python = ">=3.13"
+copier = ">=9.19"
+shellcheck = "*"
+actionlint = "*"
+lefthook = "*"
+tbump = "*"
+
+[pypi-dependencies]
+keepachangelog = "*"

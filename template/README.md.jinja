@@ -1,0 +1,31 @@
+# {{project_name}}
+{% if description %}
+{{description}}
+{% endif %}
+This is a project repo for working on the code repos listed in `repos.txt` with Claude Code.
+The code repos are cloned into `~/code/{{project_name}}/`, which is not a Git repo.
+
+## Set Up on a New Machine
+
+```sh
+git clone <this repo's URL> ~/proj/{{project_name}}
+cd ~/proj/{{project_name}}
+pixi run bootstrap   # clones the repos in repos.txt into ~/code/{{project_name}}
+claude
+```
+
+`pixi run status` shows the state of each code repo.
+`pixi run bootstrap` never changes existing clones.
+
+## Add a Code Repo
+
+Add a `<name> <url> [branch]` line to `repos.txt`, then run `pixi run bootstrap`, and commit.
+
+## Update Against Template Changes
+
+This project was created with
+[copier-claude-project](https://github.com/avcopan/copier-claude-project).
+To pull in changes to the template, run the following in a clean working tree.
+```sh
+pixi run copier-update
+```

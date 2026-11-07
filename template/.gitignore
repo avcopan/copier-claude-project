@@ -1,0 +1,15 @@
+# Machine-local Claude Code settings
+.claude/settings.local.json
+
+# OS / editor clutter
+*:Zone.Identifier
+.DS_Store
+Thumbs.db
+*~
+*.swp
+
+# Python bytecode (from any helper scripts)
+__pycache__/
+# pixi environments
+.pixi/*
+!.pixi/config.toml

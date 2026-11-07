@@ -1,0 +1,164 @@
+# Claude Code Project Copier Template
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Pixi Badge](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/prefix-dev/pixi/main/assets/badge/v0.json)](https://pixi.sh)
+[![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-border.json)](https://github.com/copier-org/copier)
+
+A [copier](https://copier.readthedocs.io/) template for setting up project repositories for working on code with [Claude Code](https://code.claude.com/).
+It is a minimal companion to [copier-pixi-python](https://github.com/avcopan/copier-pixi-python) and [copier-pixi-rust](https://github.com/avcopan/copier-pixi-rust).
+This is primarily for my own development.
+
+## Layout
+
+Each project has a private project repository, which holds the context for Claude Code, and a parent folder for the code repositories being developed in it.
+For a project named `sm`:
+
+| path | Git repo? | what it holds |
+|---|---|---|
+| `~/proj/sm/` | yes (private) | Instructions for Claude, notes, TODOs, plans, reference files, and the `repos.txt` list of code repos |
+| `~/code/sm/` | no | Just a parent folder for the code repos |
+| `~/code/sm/<repo>/` | yes | The code repositories being developed, cloned by `pixi run bootstrap` |
+
+The project repo never tracks the commits or branches of the code repos.
+Use the same paths on every machine, since Claude Code stores session history and memory by the project's absolute path.
+
+## Features
+
+- A `repos.txt` list of code repos, which `pixi run bootstrap` clones into `~/code/<project_name>/`
+- Claude Code access to the code repos, with `.claude/settings.json`
+- Instructions for Claude on the layout, in `.claude/rules/project.md`
+- A [Pixi](https://pixi.sh/) workspace, for dependencies and tasks to run and test the project's code
+- Updates against template changes with `pixi run copier-update`
+
+## Instructions
+
+### Install
+
+First, install Pixi using the command shown [here](https://pixi.prefix.dev/latest/installation/).
+Then install Copier as follows.
+
+```sh
+pixi global install copier
+```
+
+### Create a Project
+
+Use the following command to create a new project from this template.
+
+```sh
+copier copy gh:avcopan/copier-claude-project ~/proj/<project_name>
+```
+
+Copier will prompt you for the project name, which must match the directory name, and an optional one-line description.
+Then initialize the project as printed at the end:
+
+1. **Initialize the repository.**
+   Run `pixi install` (which creates `pixi.lock`), then `git init -b main`, `git add --all`, and `git commit -m "Initial commit"`.
+2. **Push to GitHub.**
+   Follow [these instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository) to create an empty private repository (without a README, license, or `.gitignore`), and push to it.
+3. **Add the code repos.**
+   Add them to `repos.txt` and run `pixi run bootstrap` (see [below](#add-code-repos)).
+4. **Trust the folder.**
+   The first time you run `claude` in the project, accept the workspace trust dialog, since Claude Code only applies the permissions in `.claude/settings.json` to trusted folders.
+
+### Set Up on a New Machine
+
+```sh
+git clone <project repo URL> ~/proj/<project_name>
+cd ~/proj/<project_name>
+pixi run bootstrap
+claude
+```
+
+### Usage
+
+#### Generated Files
+
+| file | owner | what it does |
+|---|---|---|
+| `repos.txt` | project | The code repos, one `<name> <url> [branch]` line each |
+| `scripts/bootstrap.sh` | template | Clones the missing repos (`pixi run bootstrap`) and shows the state of each one (`pixi run status`) |
+| `CLAUDE.md` | project | Project-specific instructions for Claude |
+| `.claude/rules/project.md` | template | General instructions for Claude: the layout, and how to work with the code repos |
+| `.claude/settings.json` | template | Gives Claude Code access to `~/code/<project_name>/` |
+| `pixi.toml` | both | The Pixi workspace, with the `bootstrap`, `status`, and `copier-update` tasks |
+| `README.md` | both | Setup instructions |
+| `scripts/copier-update.sh`, `scripts/conflicts.sh` | template | `pixi run copier-update` (see [below](#updating-against-template-changes)) |
+
+Files owned by the project are created once and never touched by template updates (they are listed under `_skip_if_exists` in `copier.yml`).
+Files owned by the template should not be edited, since edits to them can conflict with template updates.
+Files owned by both are merged on updates as usual.
+Put machine-specific Claude Code settings in `.claude/settings.local.json`, which is ignored by Git.
+
+#### Add Code Repos
+
+Add a line to `repos.txt` for each code repo, as follows.
+```
+<name>  <url>  [branch]
+```
+Then clone the new repos and commit.
+```sh
+pixi run bootstrap   # clones the missing repos into ~/code/<project_name>/<name>
+pixi run status      # shows the state of each repo
+```
+`pixi run bootstrap` never changes existing clones (no pull, reset, or delete), so it is safe to run again.
+A `<name>` can also be a `<group>/<name>` path, for repos organized into subfolders.
+To clone somewhere else than `~/code/<project_name>`, set the `CODE_DIR` environment variable.
+
+#### Claude Code Setup
+
+`.claude/settings.json` adds `~/code/<project_name>/` to
+[`permissions.additionalDirectories`](https://code.claude.com/docs/en/permissions), and allows Claude to read and edit files there without asking.
+Since the whole folder is added, adding a repo does not require any change to the settings.
+
+Claude Code does not load the `CLAUDE.md` files of additional directories on its own, so `.claude/rules/project.md` tells Claude to read each code repo's `CLAUDE.md`, `AGENTS.md`, and `README.md` before working in it.
+Claude Code loads `.claude/rules/*.md` automatically, like `CLAUDE.md`.
+
+### Updating Against Template Changes
+
+To update your project against changes to this template, run the following in a clean working tree.
+```sh
+pixi run copier-update
+```
+This works exactly as in
+[copier-pixi-python](https://github.com/avcopan/copier-pixi-python#updating-against-template-changes):
+it runs `copier update` against the latest [released version](#releasing-the-template) of the template, and commits the update if there are no conflicts, or else prints the conflicted files and the commands to commit the update.
+To try out template changes that have not been released yet, run `pixi run copier-update --vcs-ref=HEAD`.
+
+### Developing the Template
+
+After cloning the template repository, set it up once as follows.
+```sh
+pixi run init
+```
+This installs the template repository's own pre-commit hooks, configured in [`lefthook.yaml`](lefthook.yaml).
+They check for unresolved merge conflict markers, lint the shell scripts with [ShellCheck](https://www.shellcheck.net/) (`pixi run lint`) and the GitHub Actions workflows with [actionlint](https://github.com/rhysd/actionlint) (`pixi run workflows`), and then check that the working tree is clean.
+You can also run them directly with `pixi run pre-commit`, and temporarily disable them with `pixi run hooks off` (and re-enable them with `pixi run hooks on`).
+The [test workflow](.github/workflows/test.yml) runs them on GitHub Actions for every push.
+
+### Testing the Template
+
+There is no automated test, since the template is small.
+To test a change, generate a scratch project from the working tree (including uncommitted changes) and try it out.
+```sh
+copier copy --vcs-ref=HEAD --defaults -d project_name=demo "$PWD" /tmp/demo
+cd /tmp/demo
+pixi install
+CODE_DIR=/tmp/demo-code pixi run bootstrap
+```
+
+### Releasing the Template
+
+The template is versioned and released in the same way as
+[copier-pixi-python](https://github.com/avcopan/copier-pixi-python#releasing-the-template).
+Describe your changes under the `[Unreleased]` heading in [`CHANGELOG.md`](CHANGELOG.md), and then trigger a release by running this command.
+```sh
+pixi run release <new version number>
+```
+This updates the version in `pixi.toml`, turns the `[Unreleased]` section of `CHANGELOG.md` into an entry for the new version, and creates a release commit tagged with the new version number, then pushes both the commit and the tag to GitHub.
+The [release workflow](.github/workflows/release.yml) then runs the pre-commit hooks and posts the new release on GitHub.
+`copier update` only picks up template changes once they are released.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).

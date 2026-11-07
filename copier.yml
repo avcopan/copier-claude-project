@@ -1,0 +1,29 @@
+_subdirectory: template
+
+# These files belong to the project after the first copy, so updates never touch them
+_skip_if_exists:
+  - CLAUDE.md
+  - repos.txt
+
+_message_after_copy: |
+  Your project has been created in {{ _copier_conf.dst_path }}.
+  Next, initialize it as follows:
+    cd {{ _copier_conf.dst_path }}
+    pixi install
+    git init -b main
+    git add --all
+    git commit -m "Initial commit"
+  Then create a private GitHub repository named {{ project_name }} (without a README,
+  license, or .gitignore), push to it, add your code repos to repos.txt, and run:
+    pixi run bootstrap
+
+# questions
+project_name:
+  type: str
+  help: Project name (the directory name in ~/proj/<project_name> and ~/code/<project_name>)
+  validator: "{% if not project_name or project_name != project_name.lower() or not project_name.replace('-', '').replace('_', '').isalnum() or not project_name[0].isalpha() %}Use lowercase letters, digits, '-', and '_', starting with a letter{% endif %}"
+
+description:
+  type: str
+  help: One-line project description (optional)
+  default: ""

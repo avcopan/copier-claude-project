@@ -1,0 +1,16 @@
+[workspace]
+channels = ["conda-forge"]
+name = "{{project_name}}"
+platforms = ["linux-64"]
+
+[tasks]
+# Clone the code repos listed in repos.txt that are missing (see scripts/bootstrap.sh)
+bootstrap = "./scripts/bootstrap.sh"
+# Show the state of each code repo
+status = "./scripts/bootstrap.sh status"
+# Update against template changes (see scripts/copier-update.sh)
+copier-update = "./scripts/copier-update.sh"
+
+[dependencies]
+# Template updates
+copier = "*"

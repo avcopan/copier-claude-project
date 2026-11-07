@@ -1,0 +1,33 @@
+# Project repo layout
+
+This file comes from the [copier-claude-project](https://github.com/avcopan/copier-claude-project)
+template and is updated by `pixi run copier-update`.
+Put project-specific instructions in `CLAUDE.md` instead.
+
+## Layout
+
+| path | Git repo? | what it holds |
+|---|---|---|
+| `~/proj/{{project_name}}/` (this repo) | yes | Context for Claude: instructions, notes, TODOs, plans, reference files, and `repos.txt` |
+| `~/code/{{project_name}}/` | no | Just a parent folder for the code repos |
+| `~/code/{{project_name}}/<repo>/` | yes | The code repositories being developed in this project, listed in `repos.txt` |
+
+## Working with the code repos
+
+- Code changes go in the code repos and are committed there, with `git -C ~/code/{{project_name}}/<repo> ...` or after `cd`-ing into the repo.
+  Notes, TODOs, and plans go in this repo.
+  Never commit files from one repo to another.
+- Before working in a code repo, read its `CLAUDE.md`, `AGENTS.md`, and `README.md`, if they exist.
+  Claude Code does not load them automatically, since the code repos are outside this directory.
+  Follow that repo's own conventions.
+  The user decides when to push.
+- If a repo listed in `repos.txt` is missing, ask the user to run `pixi run bootstrap`.
+  `pixi run status` shows the state of each repo.
+- To add a repo, clone it into `~/code/{{project_name}}/<name>`, add a `<name> <url> [branch]` line to `repos.txt`, and remind the user to commit and push this repo.
+
+## This repo
+
+- It is a Pixi workspace (`pixi.toml`), which can hold dependencies and tasks for running and testing the project's code.
+- Template updates go through `pixi run copier-update` (see `~/proj/ref/cop/copier-pixi-templates.md`, section 3, for resolving conflicts).
+  Never edit `.copier-answers.yml` by hand.
+- The shared reference library is indexed at `~/proj/ref/INDEX.md`.

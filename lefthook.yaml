@@ -1,0 +1,17 @@
+# Commands are run in the order of their names
+pre-commit:
+  parallel: false
+  exclude:
+    - .pixi/
+  commands:
+    0-conflicts:
+      run: ./scripts/conflicts.sh
+
+    1-lint:
+      run: pixi run lint
+
+    2-workflows:
+      run: pixi run workflows
+
+    3-check-clean:
+      run: git diff --exit-code
