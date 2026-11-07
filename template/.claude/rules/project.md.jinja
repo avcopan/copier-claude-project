@@ -21,6 +21,8 @@ Put project-specific instructions in `CLAUDE.md` instead.
   Claude Code does not load them automatically, since the code repos are outside this directory.
   Follow that repo's own conventions.
   The user decides when to push.
+- Keep each code repo's `CLAUDE.md` standalone: it should only say things that hold for anyone who clones that repo on any machine.
+  Facts about this workspace (where TODOs live, where sibling repos are cloned, how the repos relate to this project) go in this repo instead.
 - If a repo listed in `repos.txt` is missing, ask the user to run `pixi run bootstrap`.
   `pixi run status` shows the state of each repo.
 - To add a repo, clone it into `~/code/{{project_name}}/<name>`, add a `<name> <url> [branch]` line to `repos.txt`, and remind the user to commit and push this repo.
