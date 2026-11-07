@@ -3,7 +3,7 @@ authors = ["avcopan <avcopan@gmail.com>"]
 channels = ["conda-forge"]
 name = "copier-claude-project"
 platforms = ["linux-64"]
-version = "0.0.1"
+version = "0.0.2"
 
 [tasks]
 # Individual tasks for pre-commit hooks (must be added to lefthook.yaml)
