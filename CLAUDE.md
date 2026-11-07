@@ -2,12 +2,9 @@
 
 A Copier template for Claude Code project repos (`~/proj/<name>`), whose code repos are cloned into `~/code/<name>/<repo>`.
 `template/` (`_subdirectory`) is what gets generated.
-The repo root has its own tooling, which mirrors the root of `../copier-pixi-python` (tbump releases, Lefthook hooks, `pixi run init`/`hooks`), but the generated projects are deliberately bare-bones: no versioning, hooks, tests, or workflows.
+The repo root has its own tooling, which mirrors the root of [copier-pixi-python](https://github.com/avcopan/copier-pixi-python) (tbump releases, Lefthook hooks, `pixi run init`/`hooks`), but the generated projects are deliberately bare-bones: no versioning, hooks, tests, or workflows.
 [`README.md`](README.md) is the reference for how everything works.
 Read the relevant section before changing anything.
-This repo is developed from the `ref` project (`~/proj/ref`), which is itself generated from this template.
-Open and deferred items are in `~/proj/ref/cop/TODO.md`.
-Update it when you finish an item or find a new one.
 
 ## Workflow
 
@@ -16,6 +13,7 @@ Update it when you finish an item or find a new one.
   Use absolute paths, because a relative template path is stored relative to the cwd.
   To test `bootstrap.sh` without touching `~/code`, set `CODE_DIR`.
 - There is no automated template test; verify changes by hand in a scratch project (see "Testing the Template" in the README).
+  Also test `pixi run copier-update` and releases by hand in a real project generated from the template.
 - `pixi run pre-commit` runs this repo's hooks (shellcheck on all scripts, actionlint, clean-tree check).
 - Releases: add CHANGELOG `[Unreleased]` entries, then `pixi run release X.Y.Z` (tbump tags and pushes; `release.yml` runs the hooks, then makes a GitHub release).
   The user does all pushes and releases: commit and prepare a release (CHANGELOG entries, passing hooks, clean tree), then say the version to use, but never run `git push` or `pixi run release`.
@@ -25,11 +23,11 @@ Update it when you finish an item or find a new one.
 ## Conventions
 
 - Keep the template minimal: it should only contain the bones that every project needs.
-- `template/scripts/copier-update.sh` and `conflicts.sh` are copies of the ones in `../copier-pixi-python/template/scripts/`; keep them in sync.
-- `template/scripts/bootstrap.sh` is POSIX `sh`, never changes existing clones, and must keep supporting `<group>/<name>` paths, which `ref` uses.
+- `template/scripts/copier-update.sh` and `conflicts.sh` are copies of the ones in `template/scripts/` of [copier-pixi-python](https://github.com/avcopan/copier-pixi-python); keep them in sync.
+- `template/scripts/bootstrap.sh` is POSIX `sh`, never changes existing clones, and must keep supporting `<group>/<name>` paths (e.g. a reference library grouped by topic).
 - Files the user owns after the first copy are listed in `_skip_if_exists` (`CLAUDE.md`, `repos.txt`).
   Instructions that should follow template updates go in `template/.claude/rules/project.md.jinja` instead.
-- README style as in `../copier-pixi-python/CLAUDE.md`: one sentence per line, bold lead-ins.
+- README style as in copier-pixi-python's `CLAUDE.md`: one sentence per line, bold lead-ins.
 
 ## Pitfalls
 
