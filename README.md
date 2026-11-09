@@ -76,7 +76,7 @@ claude
 
 | file | owner | what it does |
 |---|---|---|
-| `repos.txt` | project | The code repos, one `<name> <url> [branch]` line each |
+| `repos.txt` | project | The code repos, one `<name> <url> [branch] [upstream=<url>]` line each |
 | `scripts/bootstrap.sh` | template | Clones the missing repos (`pixi run bootstrap`) and shows the state of each one (`pixi run status`) |
 | `CLAUDE.md` | project | Project-specific instructions for Claude |
 | `.claude/rules/project.md` | template | General instructions for Claude: the layout, and how to work with the code repos |
@@ -94,14 +94,17 @@ Put machine-specific Claude Code settings in `.claude/settings.local.json`, whic
 
 Add a line to `repos.txt` for each code repo, as follows.
 ```
-<name>  <url>  [branch]
+<name>  <url>  [branch]  [upstream=<url>]
 ```
+For a fork, `upstream=<url>` adds the original repo as the `upstream` remote (and fetches it), so the fork can be updated against it.
 Then clone the new repos and commit.
 ```sh
 pixi run bootstrap   # clones the missing repos into ~/code/<project_name>/<name>
 pixi run status      # shows the state of each repo
 ```
 `pixi run bootstrap` never changes existing clones (no pull, reset, or delete), so it is safe to run again.
+The one exception is that it adds a missing `upstream` remote, so `upstream=<url>` can be added to the line of an existing clone.
+An existing `upstream` remote is never changed: if its URL differs from `repos.txt`, `pixi run bootstrap` warns and `pixi run status` flags it.
 A `<name>` can also be a `<group>/<name>` path, for repos organized into subfolders.
 To clone somewhere else than `~/code/<project_name>`, set the `CODE_DIR` environment variable.
 

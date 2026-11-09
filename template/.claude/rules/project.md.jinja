@@ -25,7 +25,7 @@ Put project-specific instructions in `CLAUDE.md` instead.
   Facts about this workspace (where TODOs live, where sibling repos are cloned, how the repos relate to this project) go in this repo instead.
 - If a repo listed in `repos.txt` is missing, ask the user to run `pixi run bootstrap`.
   `pixi run status` shows the state of each repo.
-- To add a repo, clone it into `~/code/{{project_name}}/<name>`, add a `<name> <url> [branch]` line to `repos.txt`, and remind the user to commit and push this repo.
+- To add a repo, clone it into `~/code/{{project_name}}/<name>`, add a `<name> <url> [branch] [upstream=<url>]` line to `repos.txt` (`upstream=` gives a fork's original repo, which bootstrap adds as the `upstream` remote), and remind the user to commit and push this repo.
 
 ## This repo
 

@@ -24,7 +24,7 @@ Read the relevant section before changing anything.
 
 - Keep the template minimal: it should only contain the bones that every project needs.
 - `template/scripts/copier-update.sh` and `conflicts.sh` are copies of the ones in `template/scripts/` of [copier-pixi-python](https://github.com/avcopan/copier-pixi-python); keep them in sync.
-- `template/scripts/bootstrap.sh` is POSIX `sh`, never changes existing clones, and must keep supporting `<group>/<name>` paths (e.g. a reference library grouped by topic).
+- `template/scripts/bootstrap.sh` is POSIX `sh`, never changes existing clones (except to add a missing `upstream` remote), and must keep supporting `<group>/<name>` paths (e.g. a reference library grouped by topic).
 - Files the user owns after the first copy are listed in `_skip_if_exists` (`CLAUDE.md`, `repos.txt`).
   Instructions that should follow template updates go in `template/.claude/rules/project.md.jinja` instead.
 - README style as in copier-pixi-python's `CLAUDE.md`: one sentence per line, bold lead-ins.

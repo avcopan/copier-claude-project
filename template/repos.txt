@@ -2,6 +2,8 @@
 # `pixi run bootstrap` (see scripts/bootstrap.sh).
 #
 # Format: one repo per line, whitespace-separated:
-#   <name>  <url>  [branch]
-# <name> may also be a <group>/<name> path. Blank lines and lines starting with '#'
-# are ignored. Edit by hand, then run `pixi run bootstrap`.
+#   <name>  <url>  [branch]  [upstream=<url>]
+# <name> may also be a <group>/<name> path. For a fork, upstream=<url> adds the
+# original repo as the `upstream` remote (also to existing clones that lack one).
+# Blank lines and lines starting with '#' are ignored. Edit by hand, then run
+# `pixi run bootstrap`.
