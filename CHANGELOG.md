@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.0.3] - 2026-11-09
+
 ### Added
 
 - An optional `upstream=<url>` field in `repos.txt`, for forks: `pixi run bootstrap` adds it as the `upstream` remote (also to existing clones that lack one, never changing an existing one), and `pixi run status` shows it and flags a missing or different one
