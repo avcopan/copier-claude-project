@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.0.4] - 2026-11-11
+
 ### Added
 
 - A planning workflow for projects, built on four files: `PROMPT.md` (the seed prompt), `VISION.md` (architecture and decision log), `PLAN.md` (open and future work only, starting with `## Now`), and `HISTORY.md` (completed work, and how it differed from the plan)
