@@ -27,6 +27,7 @@ Use the same paths on every machine, since Claude Code stores session history an
 - A `repos.txt` list of code repos, which `pixi run bootstrap` clones into `~/code/<project_name>/`
 - Claude Code access to the code repos, with `.claude/settings.json`
 - Instructions for Claude on the layout, in `.claude/rules/project.md`
+- A planning workflow, with the `/project-plan` skill: a seed prompt, a vision, a plan of the open work, and a history of the completed work
 - A [Pixi](https://pixi.sh/) workspace, for dependencies and tasks to run and test the project's code
 - Updates against template changes with `pixi run copier-update`
 
@@ -80,6 +81,7 @@ claude
 | `scripts/bootstrap.sh` | template | Clones the missing repos (`pixi run bootstrap`) and shows the state of each one (`pixi run status`) |
 | `CLAUDE.md` | project | Project-specific instructions for Claude |
 | `.claude/rules/project.md` | template | General instructions for Claude: the layout, and how to work with the code repos |
+| `.claude/skills/project-plan/` | template | The `/project-plan` skill, with skeletons for the planning documents (see [below](#planning-workflow)) |
 | `.claude/settings.json` | template | Gives Claude Code access to `~/code/<project_name>/` |
 | `pixi.toml` | both | The Pixi workspace, with the `bootstrap`, `status`, and `copier-update` tasks |
 | `README.md` | both | Setup instructions |
@@ -116,6 +118,33 @@ Since the whole folder is added, adding a repo does not require any change to th
 
 Claude Code does not load the `CLAUDE.md` files of additional directories on its own, so `.claude/rules/project.md` tells Claude to read each code repo's `CLAUDE.md`, `AGENTS.md`, and `README.md` before working in it.
 Claude Code loads `.claude/rules/*.md` automatically, like `CLAUDE.md`.
+
+#### Planning Workflow
+
+A project is planned in four files at the root of the project repo.
+None of them is generated with the project: the `/project-plan` skill writes them when you ask for them, so a project without a plan (such as a reference library) stays bare.
+
+| file | what it holds |
+|---|---|
+| `PROMPT.md` | The seed prompt that the vision and plan are generated from: scope, responsibilities, and the resources to read |
+| `VISION.md` | What is being built and why: architecture, principles, names, and a dated decision log |
+| `PLAN.md` | Open and future work only, starting with a `## Now` section of the steps currently open |
+| `HISTORY.md` | Completed work, newest first: what was done, where, and how it differed from the plan |
+
+Run `/project-plan` in Claude Code.
+It picks its stage from the files that exist:
+
+| state of the repo | stage | what happens |
+|---|---|---|
+| No `PROMPT.md`, no `PLAN.md` | **Gather** | Claude asks about the goal and your responsibilities, takes stock of the code repos and reference material, helps add what is missing, and writes `PROMPT.md` for you to review |
+| `PROMPT.md`, no `PLAN.md` | **Generate** | Claude follows the prompt and writes `VISION.md`, `PLAN.md`, and the first `HISTORY.md` entry. Best done in a fresh session |
+| An older `PLAN.md` or `TODO.md` | **Migrate** | Claude sorts every item into open work (`PLAN.md`), completed work (`HISTORY.md`), or architecture and decisions (`VISION.md`), and deletes `TODO.md` |
+| All in place | **Status** | Claude checks the `## Now` steps against the repos, moves the finished ones to `HISTORY.md`, and reports what is left |
+
+From then on, `.claude/rules/project.md` tells Claude to keep the files current in every session:
+a finished step is removed from `PLAN.md` and added to `HISTORY.md` in the same commit, with a note on how the work differed from the plan.
+So `PLAN.md` always shows what is left, and `HISTORY.md` shows what was done.
+`PROMPT.md` is kept as history once it has been used, and the plan is edited in place from then on.
 
 ### Updating Against Template Changes
 

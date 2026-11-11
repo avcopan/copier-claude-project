@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- A planning workflow for projects, built on four files: `PROMPT.md` (the seed prompt), `VISION.md` (architecture and decision log), `PLAN.md` (open and future work only, starting with `## Now`), and `HISTORY.md` (completed work, and how it differed from the plan)
+  - A `project-plan` skill (`/project-plan`) in `.claude/skills/`, which gathers resources and writes `PROMPT.md`, generates the vision and plan from it, migrates an older `PLAN.md` or `TODO.md` to this layout, and reports what is left to do
+  - A "Planning documents" section in `.claude/rules/project.md`, which has Claude move each finished step from `PLAN.md` to `HISTORY.md`
+
 ## [0.0.3] - 2026-11-09
 
 ### Added
