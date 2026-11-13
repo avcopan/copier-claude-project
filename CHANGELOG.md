@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.0.5] - 2026-11-13
+
 ### Added
 
 - Step walkthroughs: `walkthroughs/YYYY-MM-DD-short-slug.md`, a detailed how-to for one `PLAN.md` step, linked from the step while it is open and from its `HISTORY.md` entry once done
