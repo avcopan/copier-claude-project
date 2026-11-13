@@ -30,7 +30,7 @@ Read the relevant section before changing anything.
 - `project.md` is loaded in every session, so keep it to short, always-on rules.
   Procedures that are used now and then go in a skill under `template/.claude/skills/` (as `project-plan` does), with the rule pointing to it.
   Skill files have no `.jinja` suffix, so Copier copies them as they are.
-- The planning documents (`PROMPT.md`, `VISION.md`, `PLAN.md`, `HISTORY.md`) are not template files: the `project-plan` skill writes them from the skeletons in its `templates/` folder.
+- The planning documents (`PROMPT.md`, `VISION.md`, `PLAN.md`, `HISTORY.md`, and the files in `walkthroughs/`) are not template files: the `project-plan` skill writes them from the skeletons in its `templates/` folder.
   Keep the skeletons, the skill, the rule and the README's "Planning Workflow" section in agreement.
 - README style as in copier-pixi-python's `CLAUDE.md`: one sentence per line, bold lead-ins.
 

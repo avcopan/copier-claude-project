@@ -1,13 +1,13 @@
 ---
 name: project-plan
-description: Set up and maintain this project repo's planning documents (PROMPT.md, VISION.md, PLAN.md, HISTORY.md). Use when the user wants to start planning a project, gather resources for a plan, write or generate the plan, bring an older PLAN.md or TODO.md into this layout, or see what is left to do.
+description: Set up and maintain this project repo's planning documents (PROMPT.md, VISION.md, PLAN.md, HISTORY.md, walkthroughs/). Use when the user wants to start planning a project, gather resources for a plan, write or generate the plan, bring an older PLAN.md or TODO.md into this layout, see what is left to do, or walk through a plan step (write a detailed how-to for it).
 ---
 
 # Project planning documents
 
-A project is planned in four files at the root of the project repo.
+A project is planned in four files at the root of the project repo, plus a `walkthroughs/` folder.
 `.claude/rules/project.md` ("Planning documents") has the rules for keeping them up to date; this skill has the procedures.
-Skeletons for all four are in [`templates/`](templates/).
+Skeletons for all of them are in [`templates/`](templates/).
 
 | file | what it holds |
 |---|---|
@@ -15,6 +15,7 @@ Skeletons for all four are in [`templates/`](templates/).
 | `VISION.md` | What is being built and why: architecture, principles, names, and a dated decision log |
 | `PLAN.md` | Open and future work only, starting with `## Now` |
 | `HISTORY.md` | Completed work, newest first |
+| `walkthroughs/YYYY-MM-DD-short-slug.md` | A detailed how-to for one `PLAN.md` step (the date it was written): decisions, ordered steps with files, and verification |
 
 ## Pick the stage
 
@@ -26,6 +27,9 @@ Look at which files exist, tell the user which stage applies, and do that stage 
 | `PROMPT.md` but no `PLAN.md` | [Generate](#generate-write-visionmd-planmd-and-historymd) |
 | `PLAN.md` that isn't in the layout: no `HISTORY.md`, ticked boxes in it, no `## Now`, or a `TODO.md` next to it | [Migrate](#migrate-an-older-plan) |
 | All in place | [Status](#status) |
+
+[Walk through a step](#walk-through-a-step-write-a-walkthrough) is the exception: do it when the user asks to walk through, or work out the details of, a `PLAN.md` step, whatever the other files say.
+It needs a `PLAN.md` in the layout; migrate first if there isn't one.
 
 In every stage, write the files and leave them uncommitted for the user to review.
 Commit when they say so.
@@ -86,9 +90,26 @@ Nothing may be lost: every item in the old files ends up in exactly one of the n
    - each item of the old files (`git show HEAD:PLAN.md`, `git show HEAD:TODO.md`) is in exactly one new file;
    - relative links resolve.
 
+## Walk through a step: write a walkthrough
+
+A walkthrough turns one `## Now` step into a how-to that a later session can follow without this conversation.
+It must outlive the session: write it to `walkthroughs/`, never only into Claude's plan file.
+In plan mode, plan the walkthrough itself, and write the file as the first action once the plan is approved.
+
+1. **Pick the step.** Take the one the user names, or the `## Now` step marked to pick up next; ask if it is unclear.
+2. **Read** the files and code the step names, the decision-log rows it cites, and the code repo's `CLAUDE.md`, `AGENTS.md` and `README.md`.
+3. **Ask the user** for every design decision the step leaves open, each with a recommendation.
+   Don't decide them yourself.
+4. **Write `walkthroughs/<today>-<short-slug>.md`** from [`templates/WALKTHROUGH.md`](templates/WALKTHROUGH.md): the context, the decisions, and ordered steps that name their files, ending with verification, the commit, and the planning-document updates (decision log, `PLAN.md` → `HISTORY.md`).
+   Name it like the reference library's files: lowercase, hyphens, ASCII.
+5. **Link it** from the `PLAN.md` step ("follow [the walkthrough](walkthroughs/<file>)"), and remove from the step the open decisions it settles.
+
+When work on the step stops part-way, update the walkthrough's "Where I left off" section: the branch, any WIP commit, what is done, and the next action.
+When the step is finished, its `HISTORY.md` entry links to the walkthrough, and the file is kept.
+
 ## Status
 
 1. Check `## Now` against reality: for each step, look at the repos (and package indexes, if a step is a release) to see whether it is in fact done.
-2. Move finished steps to `HISTORY.md`, as the rules describe.
+2. Move finished steps to `HISTORY.md`, as the rules describe, linking each step's walkthrough if it has one.
 3. When `## Now` is empty, promote the next phase's steps into it.
 4. Report what is left: the `## Now` list, then the open questions that block it.

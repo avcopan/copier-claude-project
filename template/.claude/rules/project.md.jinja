@@ -29,8 +29,8 @@ Put project-specific instructions in `CLAUDE.md` instead.
 
 ## Planning documents
 
-A project with a plan keeps these four files in this repo.
-The `project-plan` skill (`/project-plan`) creates them, migrates an older plan to this layout, and shows what is left to do.
+A project with a plan keeps these files in this repo.
+The `project-plan` skill (`/project-plan`) creates them, migrates an older plan to this layout, writes step walkthroughs, and shows what is left to do.
 This section applies once the project has a `PLAN.md`.
 
 | file | what it holds |
@@ -39,12 +39,16 @@ This section applies once the project has a `PLAN.md`.
 | `VISION.md` | What is being built and why: architecture, principles, names, and a dated decision log |
 | `PLAN.md` | Open and future work only. It starts with `## Now`, the steps currently open |
 | `HISTORY.md` | Completed work, newest first: what was done, where, and how it differed from the plan |
+| `walkthroughs/` | Detailed how-tos for `PLAN.md` steps that need one, named `YYYY-MM-DD-short-slug.md` (the date written) |
 
 - When a step in `PLAN.md` is finished, remove it from `PLAN.md` and add it to `HISTORY.md` in the same commit.
   Never leave ticked boxes in `PLAN.md`.
   In `HISTORY.md`, say what now exists (repos, versions, branches) and, if the work went differently than planned, how and why.
 - When the direction changes, update `VISION.md` first, then `PLAN.md`.
   Record each decision in the decision log of `VISION.md`, and link to it from `HISTORY.md` instead of repeating it.
+- An open step links to its walkthrough.
+  When the step is done, its `HISTORY.md` entry links to the walkthrough instead, and the file is kept.
+  Walkthroughs are written to `walkthroughs/` (`/project-plan`), never kept only in Claude's plan file.
 - Keep no separate `TODO.md`: small chores go under `## Now`.
 - Edit `PLAN.md` in place.
   Don't regenerate it from `PROMPT.md` once work has started.

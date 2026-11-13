@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Step walkthroughs: `walkthroughs/YYYY-MM-DD-short-slug.md`, a detailed how-to for one `PLAN.md` step, linked from the step while it is open and from its `HISTORY.md` entry once done
+  - A "Walk through a step" stage in the `project-plan` skill, which reads the code the step touches, asks for its design decisions, and writes the walkthrough from a new `WALKTHROUGH.md` skeleton
+  - The `walkthroughs/` folder and its lifecycle in the "Planning documents" section of `.claude/rules/project.md`
+
 ## [0.0.4] - 2026-11-11
 
 ### Added
