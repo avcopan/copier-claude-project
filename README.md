@@ -126,7 +126,7 @@ None of them is generated with the project: the `/project-plan` skill writes the
 
 | file | what it holds |
 |---|---|
-| `PROMPT.md` | The seed prompt that the vision and plan are generated from: scope, responsibilities, and the resources to read |
+| `PROMPT.md` | The seed prompt that the vision and plan are generated from: scope, responsibilities, and the resources to read. Deleted once the plan exists |
 | `VISION.md` | What is being built and why: architecture, principles, names, and a dated decision log |
 | `PLAN.md` | Open and future work only, starting with a `## Now` section of the steps currently open |
 | `HISTORY.md` | Completed work, newest first: what was done, where, and how it differed from the plan |
@@ -139,7 +139,7 @@ It picks its stage from the files that exist:
 |---|---|---|
 | No `PROMPT.md`, no `PLAN.md` | **Gather** | Claude asks about the goal and your responsibilities, takes stock of the code repos and reference material, helps add what is missing, and writes `PROMPT.md` for you to review |
 | `PROMPT.md`, no `PLAN.md` | **Generate** | Claude follows the prompt and writes `VISION.md`, `PLAN.md`, and the first `HISTORY.md` entry. Best done in a fresh session |
-| An older `PLAN.md` or `TODO.md` | **Migrate** | Claude sorts every item into open work (`PLAN.md`), completed work (`HISTORY.md`), or architecture and decisions (`VISION.md`), and deletes `TODO.md` |
+| An older `PLAN.md` or `TODO.md` | **Migrate** | Claude sorts every item into open work (`PLAN.md`), completed work (`HISTORY.md`), or architecture and decisions (`VISION.md`), and deletes `TODO.md` and `PROMPT.md` |
 | All in place | **Status** | Claude checks the `## Now` steps against the repos, moves the finished ones to `HISTORY.md`, and reports what is left |
 | Any, when you ask to walk through a step | **Walk through** | Claude reads the code the step touches, asks you for its design decisions, and writes a walkthrough (decisions, ordered steps with files, verification) linked from the step |
 
@@ -147,7 +147,7 @@ From then on, `.claude/rules/project.md` tells Claude to keep the files current 
 a finished step is removed from `PLAN.md` and added to `HISTORY.md` in the same commit, with a note on how the work differed from the plan.
 So `PLAN.md` always shows what is left, and `HISTORY.md` shows what was done.
 A step's walkthrough is linked from `PLAN.md` while the step is open and from `HISTORY.md` once it is done, and the file is kept.
-`PROMPT.md` is kept as history once it has been used, and the plan is edited in place from then on.
+Once you have reviewed the generated plan, `PROMPT.md` is deleted, with a `HISTORY.md` entry naming the commit to recover it from, and the plan is edited in place from then on.
 
 ### Updating Against Template Changes
 

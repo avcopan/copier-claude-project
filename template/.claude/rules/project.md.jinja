@@ -35,7 +35,7 @@ This section applies once the project has a `PLAN.md`.
 
 | file | what it holds |
 |---|---|
-| `PROMPT.md` | The seed prompt that the vision and plan were generated from: scope, responsibilities, and the resources to read. Once used, it is kept as history |
+| `PROMPT.md` | The seed prompt that the vision and plan are generated from: scope, responsibilities, and the resources to read. Deleted once the plan exists; `HISTORY.md` names the commit to recover it from |
 | `VISION.md` | What is being built and why: architecture, principles, names, and a dated decision log |
 | `PLAN.md` | Open and future work only. It starts with `## Now`, the steps currently open |
 | `HISTORY.md` | Completed work, newest first: what was done, where, and how it differed from the plan |
@@ -51,7 +51,7 @@ This section applies once the project has a `PLAN.md`.
   Walkthroughs are written to `walkthroughs/` (`/project-plan`), never kept only in Claude's plan file.
 - Keep no separate `TODO.md`: small chores go under `## Now`.
 - Edit `PLAN.md` in place.
-  Don't regenerate it from `PROMPT.md` once work has started.
+  Don't regenerate it from the old prompt once work has started.
 
 ## This repo
 

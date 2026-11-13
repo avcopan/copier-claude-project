@@ -11,7 +11,7 @@ Skeletons for all of them are in [`templates/`](templates/).
 
 | file | what it holds |
 |---|---|
-| `PROMPT.md` | The seed prompt: scope, responsibilities, the resources to read, and what the vision and plan must contain |
+| `PROMPT.md` | The seed prompt: scope, responsibilities, the resources to read, and what the vision and plan must contain. Deleted once the plan is generated; git keeps it |
 | `VISION.md` | What is being built and why: architecture, principles, names, and a dated decision log |
 | `PLAN.md` | Open and future work only, starting with `## Now` |
 | `HISTORY.md` | Completed work, newest first |
@@ -67,8 +67,10 @@ If this session already holds a lot of other context, suggest starting a new one
    - Link to files instead of copying their text. Keep architecture and rationale in `VISION.md`.
    - Collect everything the user must answer under "Open questions", each with a recommendation and the phase it blocks.
 4. Write **`HISTORY.md`** from [`templates/HISTORY.md`](templates/HISTORY.md), with a first entry for the work done so far: the project set-up and the resources gathered.
-5. Add a status line under the title of `PROMPT.md`: `> Status: used on <date> to write VISION.md and PLAN.md. Kept as history; the plan is edited in place.`
-6. Update the project's `CLAUDE.md` if it describes these files, and finish by listing the open questions for the user.
+5. Update the project's `CLAUDE.md` if it describes these files, and finish by listing the open questions for the user.
+6. Remind the user that `PROMPT.md` is deleted once they have reviewed the plan, since the plan is edited in place from then on.
+   When they agree, delete it in its own commit, with a `HISTORY.md` entry that names the commit to recover it from (`git show <commit>:PROMPT.md`, where `<commit>` is the one before the deletion).
+   Drop any line in `CLAUDE.md` that describes `PROMPT.md`.
 
 ## Migrate an older plan
 
@@ -83,7 +85,7 @@ Nothing may be lost: every item in the old files ends up in exactly one of the n
    - **Architecture, rationale and decisions** go to `VISION.md`. Create it if it is missing.
      Keep existing decision ids (such as `D3`), and fix references that cite them as part of `PLAN.md`.
    - **Open questions** become one list in `PLAN.md`, without the ones already decided.
-3. Delete `TODO.md`. Keep `PROMPT.md`, and give it the status line from the Generate stage if it has none.
+3. Delete `TODO.md`, and `PROMPT.md` if there is one. Record the deletions in the new `HISTORY.md` entry, with the commit to recover each from (`git show <commit>:PROMPT.md`).
 4. Update the references to these files in `CLAUDE.md` and elsewhere in the repo.
 5. Check the result:
    - `grep -n '\[x\]' PLAN.md` finds nothing;

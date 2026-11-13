@@ -12,6 +12,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - A "Walk through a step" stage in the `project-plan` skill, which reads the code the step touches, asks for its design decisions, and writes the walkthrough from a new `WALKTHROUGH.md` skeleton
   - The `walkthroughs/` folder and its lifecycle in the "Planning documents" section of `.claude/rules/project.md`
 
+### Changed
+
+- `PROMPT.md` is deleted once the plan has been generated and reviewed, instead of being kept with a status line: the Generate stage of `project-plan` reminds you to delete it, the Migrate stage deletes it, and a `HISTORY.md` entry names the commit to recover it from
+
 ## [0.0.4] - 2026-11-11
 
 ### Added
