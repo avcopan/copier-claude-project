@@ -28,9 +28,9 @@ Read the relevant section before changing anything.
 - Files the user owns after the first copy are listed in `_skip_if_exists` (`CLAUDE.md`, `repos.txt`).
   Instructions that should follow template updates go in `template/.claude/rules/project.md.jinja` instead.
 - `project.md` is loaded in every session, so keep it to short, always-on rules.
-  Procedures that are used now and then go in a skill under `template/.claude/skills/` (as `project-plan` does), with the rule pointing to it.
+  Procedures that are used now and then go in a skill under `template/.agents/skills/` (`.claude/skills` is a symlink to it, kept with `_preserve_symlinks: true`) (as `project-plan` does), with the rule pointing to it.
   Skill files have no `.jinja` suffix, so Copier copies them as they are.
-- The planning documents (`PROMPT.md`, `VISION.md`, `PLAN.md`, `HISTORY.md`, and the files in `walkthroughs/`) are not template files: the `project-plan` skill writes them from the skeletons in its `templates/` folder.
+- The planning documents (`PROMPT.md`, `VISION.md`, `PLAN.md`, `HISTORY.md`, and the files in `guides/`) are not template files: the `project-plan` skill writes them from the skeletons in its `templates/` folder.
   Keep the skeletons, the skill, the rule and the README's "Planning Workflow" section in agreement.
 - README style as in copier-pixi-python's `CLAUDE.md`: one sentence per line, bold lead-ins.
 

@@ -1,11 +1,11 @@
 ---
 name: project-plan
-description: Set up and maintain this project repo's planning documents (PROMPT.md, VISION.md, PLAN.md, HISTORY.md, walkthroughs/). Use when the user wants to start planning a project, gather resources for a plan, write or generate the plan, bring an older PLAN.md or TODO.md into this layout, see what is left to do, or walk through a plan step (write a detailed how-to for it).
+description: Set up and maintain this project repo's planning documents (PROMPT.md, VISION.md, PLAN.md, HISTORY.md, guides/). Use when the user wants to start planning a project, gather resources for a plan, write or generate the plan, bring an older PLAN.md or TODO.md into this layout, see what is left to do, or write a guide for a plan step (code skeletons and steps for the user to implement).
 ---
 
 # Project planning documents
 
-A project is planned in four files at the root of the project repo, plus a `walkthroughs/` folder.
+A project is planned in four files at the root of the project repo, plus a `guides/` folder.
 `.claude/rules/project.md` ("Planning documents") has the rules for keeping them up to date; this skill has the procedures.
 Skeletons for all of them are in [`templates/`](templates/).
 
@@ -15,7 +15,7 @@ Skeletons for all of them are in [`templates/`](templates/).
 | `VISION.md` | What is being built and why: architecture, principles, names, and a dated decision log |
 | `PLAN.md` | Open and future work only, starting with `## Now` |
 | `HISTORY.md` | Completed work, newest first |
-| `walkthroughs/YYYY-MM-DD-short-slug.md` | A detailed how-to for one `PLAN.md` step (the date it was written): decisions, ordered steps with files, and verification |
+| `guides/YYYY-MM-DD-short-slug.md` | A guide for one `PLAN.md` step (the date it was written): code skeletons and the steps to implement, each with a check. A folder `guides/<slug>/README.md` is allowed when the guide has support files (scripts, data, spec code) |
 
 ## Pick the stage
 
@@ -28,7 +28,7 @@ Look at which files exist, tell the user which stage applies, and do that stage 
 | `PLAN.md` that isn't in the layout: no `HISTORY.md`, ticked boxes in it, no `## Now`, or a `TODO.md` next to it | [Migrate](#migrate-an-older-plan) |
 | All in place | [Status](#status) |
 
-[Walk through a step](#walk-through-a-step-write-a-walkthrough) is the exception: do it when the user asks to walk through, or work out the details of, a `PLAN.md` step, whatever the other files say.
+[Write a guide](#write-a-guide-for-a-step) is the exception: do it when the user asks for a guide for, or to work out the details of, a `PLAN.md` step, whatever the other files say.
 It needs a `PLAN.md` in the layout; migrate first if there isn't one.
 
 In every stage, write the files and leave them uncommitted for the user to review.
@@ -92,26 +92,33 @@ Nothing may be lost: every item in the old files ends up in exactly one of the n
    - each item of the old files (`git show HEAD:PLAN.md`, `git show HEAD:TODO.md`) is in exactly one new file;
    - relative links resolve.
 
-## Walk through a step: write a walkthrough
+## Write a guide for a step
 
-A walkthrough turns one `## Now` step into a how-to that a later session can follow without this conversation.
-It must outlive the session: write it to `walkthroughs/`, never only into Claude's plan file.
-In plan mode, plan the walkthrough itself, and write the file as the first action once the plan is approved.
+A guide turns one `## Now` step into a document the user follows to write the code themselves.
+Its value is the skeleton (types, signatures, test stubs), so the user doesn't type boilerplate from memory, and the list of what to implement, so they spend their time on the real work.
+It must outlive the session: write it to `guides/`, never only into Claude's plan file.
+In plan mode, plan the guide itself, and write the file as the first action once the plan is approved.
 
 1. **Pick the step.** Take the one the user names, or the `## Now` step marked to pick up next; ask if it is unclear.
 2. **Read** the files and code the step names, the decision-log rows it cites, and the code repo's `CLAUDE.md`, `AGENTS.md` and `README.md`.
 3. **Ask the user** for every design decision the step leaves open, each with a recommendation.
    Don't decide them yourself.
-4. **Write `walkthroughs/<today>-<short-slug>.md`** from [`templates/WALKTHROUGH.md`](templates/WALKTHROUGH.md): the context, the decisions, and ordered steps that name their files, ending with verification, the commit, and the planning-document updates (decision log, `PLAN.md` → `HISTORY.md`).
+4. **Write `guides/<today>-<short-slug>.md`** from [`templates/GUIDE.md`](templates/GUIDE.md).
    Name it like the reference library's files: lowercase, hyphens, ASCII.
-5. **Link it** from the `PLAN.md` step ("follow [the walkthrough](walkthroughs/<file>)"), and remove from the step the open decisions it settles.
+   - Code first: for each step, fenced code with the skeleton to start from (definitions, signatures, test stubs with `todo!()`/`...` bodies), then a short description of what to implement and the edge cases. Don't write the implementation itself.
+   - Keep steps small, each ending in a **Check** the user can run.
+   - A `## Progress` checklist at the top tracks the steps and says what is **Next**, so a new session can resume.
+   - No drills. Add a `## Reading` only for material that is highly relevant (for example one section of a paper); the user wants to get to the implementation quickly.
+   - Don't write a decisions section: the decisions go in the code and prose, and into the `VISION.md` decision log at the end.
+5. **Link it** from the `PLAN.md` step ("follow [the guide](guides/<file>)"), and remove from the step the open decisions it settles.
 
-When work on the step stops part-way, update the walkthrough's "Where I left off" section: the branch, any WIP commit, what is done, and the next action.
-When the step is finished, its `HISTORY.md` entry links to the walkthrough, and the file is kept.
+While the user implements, fill in what they ask for (docstrings, derives, imports, repetitive tests) and review on request, but don't rewrite their code.
+When work stops part-way, update **Next** in `## Progress`: the branch, any WIP commit, and the next action.
+When the step is finished, its `HISTORY.md` entry links to the guide, and the file is kept.
 
 ## Status
 
 1. Check `## Now` against reality: for each step, look at the repos (and package indexes, if a step is a release) to see whether it is in fact done.
-2. Move finished steps to `HISTORY.md`, as the rules describe, linking each step's walkthrough if it has one.
+2. Move finished steps to `HISTORY.md`, as the rules describe, linking each step's guide if it has one.
 3. When `## Now` is empty, promote the next phase's steps into it.
 4. Report what is left: the `## Now` list, then the open questions that block it.
