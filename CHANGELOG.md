@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.0.6] - 2026-11-18
+
 ### Changed
 
 - Step walkthroughs are now step **guides** in `guides/`: code skeletons (types, signatures, test stubs) and the steps for you to implement, each with a check, plus a `## Progress` checklist that replaces "Where I left off". The "Walk through a step" stage of `project-plan` is now "Write a guide for a step", and `templates/WALKTHROUGH.md` is now `templates/GUIDE.md`. Drills are dropped, readings are only for highly relevant material, and there is no decisions section
