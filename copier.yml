@@ -1,5 +1,8 @@
 _subdirectory: template
 
+# .claude/skills is a symlink to ../.agents/skills (Claude Code only reads .claude/)
+_preserve_symlinks: true
+
 # These files belong to the project after the first copy, so updates never touch them
 _skip_if_exists:
   - CLAUDE.md

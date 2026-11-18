@@ -81,7 +81,8 @@ claude
 | `scripts/bootstrap.sh` | template | Clones the missing repos (`pixi run bootstrap`) and shows the state of each one (`pixi run status`) |
 | `CLAUDE.md` | project | Project-specific instructions for Claude |
 | `.claude/rules/project.md` | template | General instructions for Claude: the layout, and how to work with the code repos |
-| `.claude/skills/project-plan/` | template | The `/project-plan` skill, with skeletons for the planning documents (see [below](#planning-workflow)) |
+| `.agents/skills/project-plan/` | template | The `/project-plan` skill, with skeletons for the planning documents (see [below](#planning-workflow)) |
+| `.claude/skills` | template | A symlink to `../.agents/skills`: skills live in the agent-neutral `.agents/`, and Claude Code, which only reads `.claude/`, follows the link |
 | `.claude/settings.json` | template | Gives Claude Code access to `~/code/<project_name>/` |
 | `pixi.toml` | both | The Pixi workspace, with the `bootstrap`, `status`, and `copier-update` tasks |
 | `README.md` | both | Setup instructions |
@@ -121,7 +122,7 @@ Claude Code loads `.claude/rules/*.md` automatically, like `CLAUDE.md`.
 
 #### Planning Workflow
 
-A project is planned in four files at the root of the project repo, plus a `walkthroughs/` folder.
+A project is planned in four files at the root of the project repo, plus a `guides/` folder.
 None of them is generated with the project: the `/project-plan` skill writes them when you ask for them, so a project without a plan (such as a reference library) stays bare.
 
 | file | what it holds |
@@ -130,7 +131,7 @@ None of them is generated with the project: the `/project-plan` skill writes the
 | `VISION.md` | What is being built and why: architecture, principles, names, and a dated decision log |
 | `PLAN.md` | Open and future work only, starting with a `## Now` section of the steps currently open |
 | `HISTORY.md` | Completed work, newest first: what was done, where, and how it differed from the plan |
-| `walkthroughs/` | Detailed how-tos for single `PLAN.md` steps, named `YYYY-MM-DD-short-slug.md` |
+| `guides/` | Guides for single `PLAN.md` steps, named `YYYY-MM-DD-short-slug.md`: code skeletons and the steps for you to implement, each with a check |
 
 Run `/project-plan` in Claude Code.
 It picks its stage from the files that exist:
@@ -141,12 +142,12 @@ It picks its stage from the files that exist:
 | `PROMPT.md`, no `PLAN.md` | **Generate** | Claude follows the prompt and writes `VISION.md`, `PLAN.md`, and the first `HISTORY.md` entry. Best done in a fresh session |
 | An older `PLAN.md` or `TODO.md` | **Migrate** | Claude sorts every item into open work (`PLAN.md`), completed work (`HISTORY.md`), or architecture and decisions (`VISION.md`), and deletes `TODO.md` and `PROMPT.md` |
 | All in place | **Status** | Claude checks the `## Now` steps against the repos, moves the finished ones to `HISTORY.md`, and reports what is left |
-| Any, when you ask to walk through a step | **Walk through** | Claude reads the code the step touches, asks you for its design decisions, and writes a walkthrough (decisions, ordered steps with files, verification) linked from the step |
+| Any, when you ask for a guide to a step | **Write a guide** | Claude reads the code the step touches, asks you for its design decisions, and writes a guide (code skeletons, what to implement, a check per step) linked from the step. You write the code; Claude fills in docstrings and boilerplate on request |
 
 From then on, `.claude/rules/project.md` tells Claude to keep the files current in every session:
 a finished step is removed from `PLAN.md` and added to `HISTORY.md` in the same commit, with a note on how the work differed from the plan.
 So `PLAN.md` always shows what is left, and `HISTORY.md` shows what was done.
-A step's walkthrough is linked from `PLAN.md` while the step is open and from `HISTORY.md` once it is done, and the file is kept.
+A step's guide is linked from `PLAN.md` while the step is open and from `HISTORY.md` once it is done, and the file is kept.
 Once you have reviewed the generated plan, `PROMPT.md` is deleted, with a `HISTORY.md` entry naming the commit to recover it from, and the plan is edited in place from then on.
 
 ### Updating Against Template Changes
