@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.0.7] - 2026-11-20
+
 ### Added
 
 - `pixi run init`: sets up a new project once after `copier copy` (`pixi install`, `git init -b main`, the initial commit, `pixi run bootstrap`), then prints the `git remote add origin` and `git push -u origin main` commands. It skips the Git steps in an existing repo and warns when the Git identity is not set
