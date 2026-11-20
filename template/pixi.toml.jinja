@@ -4,6 +4,8 @@ name = "{{project_name}}"
 platforms = ["linux-64"]
 
 [tasks]
+# Set up this project after `copier copy` or `git clone` (only run once)
+init = "./scripts/init.sh"
 # Clone the code repos listed in repos.txt that are missing (see scripts/bootstrap.sh)
 bootstrap = "./scripts/bootstrap.sh"
 # Show the state of each code repo

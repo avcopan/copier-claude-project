@@ -50,13 +50,20 @@ Use the following command to create a new project from this template.
 copier copy gh:avcopan/copier-claude-project ~/proj/<project_name>
 ```
 
-Copier will prompt you for the project name, which must match the directory name, and an optional one-line description.
+Copier will prompt you for the project name, which must match the directory name, the GitHub user or organization that will own the repository, and an optional one-line description.
 Then initialize the project as printed at the end:
 
+```sh
+cd ~/proj/<project_name>
+pixi run init
+```
+
 1. **Initialize the repository.**
-   Run `pixi install` (which creates `pixi.lock`), then `git init -b main`, `git add --all`, and `git commit -m "Initial commit"`.
+   `pixi run init` runs `pixi install` (which creates `pixi.lock`), then `git init -b main` and the initial commit, then `pixi run bootstrap`.
+   It skips the Git steps in an existing repository, and warns, instead of committing, if your Git identity is not set.
 2. **Push to GitHub.**
-   Follow [these instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository) to create an empty private repository (without a README, license, or `.gitignore`), and push to it.
+   `pixi run init` prints the `git remote add origin` and `git push -u origin main` commands for you to run.
+   First follow [these instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository) to create an empty private repository (without a README, license, or `.gitignore`).
 3. **Add the code repos.**
    Add them to `repos.txt` and run `pixi run bootstrap` (see [below](#add-code-repos)).
 4. **Trust the folder.**
@@ -78,13 +85,14 @@ claude
 | file | owner | what it does |
 |---|---|---|
 | `repos.txt` | project | The code repos, one `<name> <url> [branch] [upstream=<url>]` line each |
+| `scripts/init.sh` | template | Sets up a new project (`pixi run init`, run once) |
 | `scripts/bootstrap.sh` | template | Clones the missing repos (`pixi run bootstrap`) and shows the state of each one (`pixi run status`) |
 | `CLAUDE.md` | project | Project-specific instructions for Claude |
 | `.claude/rules/project.md` | template | General instructions for Claude: the layout, and how to work with the code repos |
 | `.agents/skills/project-plan/` | template | The `/project-plan` skill, with skeletons for the planning documents (see [below](#planning-workflow)) |
 | `.claude/skills` | template | A symlink to `../.agents/skills`: skills live in the agent-neutral `.agents/`, and Claude Code, which only reads `.claude/`, follows the link |
 | `.claude/settings.json` | template | Gives Claude Code access to `~/code/<project_name>/` |
-| `pixi.toml` | both | The Pixi workspace, with the `bootstrap`, `status`, and `copier-update` tasks |
+| `pixi.toml` | both | The Pixi workspace, with the `init`, `bootstrap`, `status`, and `copier-update` tasks |
 | `README.md` | both | Setup instructions |
 | `scripts/copier-update.sh`, `scripts/conflicts.sh` | template | `pixi run copier-update` (see [below](#updating-against-template-changes)) |
 
@@ -179,8 +187,7 @@ To test a change, generate a scratch project from the working tree (including un
 ```sh
 copier copy --vcs-ref=HEAD --defaults -d project_name=demo "$PWD" /tmp/demo
 cd /tmp/demo
-pixi install
-CODE_DIR=/tmp/demo-code pixi run bootstrap
+CODE_DIR=/tmp/demo-code pixi run init
 ```
 
 ### Releasing the Template
